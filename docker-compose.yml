@@ -6,10 +6,16 @@
 # restarts, image rebuilds and redeploys, and are never baked into the image or
 # committed to git.
 #
-# If you deploy on a PaaS (Coolify / Dokploy / Render / etc.) instead of compose,
-# replicate this by mapping a persistent volume to the container path `/surakshya`
-# and setting MRD_STORAGE_PATH=/surakshya/mrd. Never mount a volume over /app — that
-# holds the application code.
+# Coolify: set the variables below under the resource's Environment Variables and
+# add the domain with container port 3000 (e.g. https://surakshya.example.com:3000).
+# The Coolify proxy routes to the container over the Docker network, so no host
+# port is published — publishing one collides with other apps on the server.
+#
+# Local: docker compose --env-file .env.local up -d --build
+# (add `ports: ["3000:3000"]` in a git-ignored docker-compose.override.yml to
+# reach it on http://localhost:3000).
+#
+# Never mount a volume over /app — that holds the application code.
 
 services:
   app:
@@ -18,14 +24,22 @@ services:
       args:
         # Public base URL is baked at build time (see Dockerfile).
         NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-}
-    image: surakshya-app
-    ports:
-      - "3000:3000"
-    # Runtime secrets (Mongo URL, NextAuth secret, SMTP, ...). Adjust to your
-    # env file; this is git-ignored and never copied into the image.
-    env_file:
-      - .env.local
+    expose:
+      - "3000"
     environment:
+      # Required — `:?` makes the deploy fail fast if any is missing.
+      NEXTAUTH_URL: ${NEXTAUTH_URL:?}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?}
+      NEXT_APP_MONGO_URL: ${NEXT_APP_MONGO_URL:?}
+      NEXT_APP_JWT_SECRET: ${NEXT_APP_JWT_SECRET:?}
+      # Optional — only needed for password-reset emails.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Hospital Management System}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
       # Where the app writes MRD files inside the container (under the volume).
       MRD_STORAGE_PATH: /surakshya/mrd
     volumes:
