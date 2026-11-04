@@ -1,0 +1,17 @@
+{
+  "name": "Surakshya Nursing Home",
+  "short_name": "Surakshya",
+  "description": "Surakshya Nursing Home patient care and hospital management system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1b7a34",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
