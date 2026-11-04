@@ -1,0 +1,27 @@
+.git
+.github
+.next
+node_modules
+
+.env
+.env.*
+!.env.example
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+coverage
+build
+out
+
+# Local MRD uploads — must never enter the build context or the image; they
+# live on a mounted volume at runtime.
+storage
+
+.DS_Store
+.idea
+.vscode
+
+README.md

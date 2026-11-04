@@ -1,0 +1,36 @@
+# Reference deployment with PERSISTENT storage for MRD (Medical Records) uploads.
+#
+# The named volume `mrd_storage` is mounted at /surakshya, so every file uploaded
+# through the MRD section is written to the volume — NOT into the container's
+# ephemeral layer. That means uploaded medical-record files survive container
+# restarts, image rebuilds and redeploys, and are never baked into the image or
+# committed to git.
+#
+# If you deploy on a PaaS (Coolify / Dokploy / Render / etc.) instead of compose,
+# replicate this by mapping a persistent volume to the container path `/surakshya`
+# and setting MRD_STORAGE_PATH=/surakshya/mrd. Never mount a volume over /app — that
+# holds the application code.
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        # Public base URL is baked at build time (see Dockerfile).
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-}
+    image: surakshya-app
+    ports:
+      - "3000:3000"
+    # Runtime secrets (Mongo URL, NextAuth secret, SMTP, ...). Adjust to your
+    # env file; this is git-ignored and never copied into the image.
+    env_file:
+      - .env.local
+    environment:
+      # Where the app writes MRD files inside the container (under the volume).
+      MRD_STORAGE_PATH: /surakshya/mrd
+    volumes:
+      - mrd_storage:/surakshya
+    restart: unless-stopped
+
+volumes:
+  mrd_storage:
