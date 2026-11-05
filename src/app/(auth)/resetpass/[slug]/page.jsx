@@ -25,6 +25,9 @@ export default function ResetPassword() {
     const [submitting, setSubmitting] = useState(false);
     const [resending, setResending] = useState(false);
     const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_SECONDS);
+    // Until hydration the form has no handler and would do a native GET reload.
+    const [hydrated, setHydrated] = useState(false);
+    useEffect(() => setHydrated(true), []);
     const { slug } = useParams();
     const email = decodeEmail(slug);
     const router = useRouter()
@@ -147,7 +150,7 @@ export default function ResetPassword() {
 
                     <button
                         type="submit"
-                        disabled={submitting}
+                        disabled={!hydrated || submitting}
                         className="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200 flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         <FaKey className="mr-2" />

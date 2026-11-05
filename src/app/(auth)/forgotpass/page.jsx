@@ -4,12 +4,15 @@ import { ErrorHandeling } from "@/utils/errorHandling";
 import { SuccessHandling } from "@/utils/successHandling";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaLock } from "react-icons/fa";
 
 export default function ForgotPassword() {
     const router = useRouter()
     const [sending, setSending] = useState(false);
+    // Until hydration the form has no handler and would do a native GET reload.
+    const [hydrated, setHydrated] = useState(false);
+    useEffect(() => setHydrated(true), []);
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (sending) return;
@@ -58,7 +61,7 @@ export default function ForgotPassword() {
 
                     <button
                         type="submit"
-                        disabled={sending}
+                        disabled={!hydrated || sending}
                         className="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200 flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         <FaLock className="mr-2" />
