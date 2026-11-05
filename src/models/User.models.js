@@ -38,6 +38,11 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Password-reset OTP state. Hidden from queries unless explicitly selected.
+    resetOtpHash: { type: String, select: false },
+    resetOtpExpires: { type: Date, select: false },
+    resetOtpRequestedAt: { type: Date, select: false },
+    resetOtpAttempts: { type: Number, default: 0, select: false },
   },
   { timestamps: true }
 );

@@ -4,18 +4,23 @@ import { ErrorHandeling } from "@/utils/errorHandling";
 import { SuccessHandling } from "@/utils/successHandling";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 
 export default function ForgotPassword() {
     const router = useRouter()
+    const [sending, setSending] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (sending) return;
+        setSending(true);
         try {
-            const { data } = await axios.post('/api/resetpassword/findemail', { email: e.target.email.value  });
+            const { data } = await axios.post('/api/resetpassword/findemail', { email: e.target.email.value });
             SuccessHandling(data?.message)
-            router.push(`/resetpass/${data?.token}`)
+            router.push(`/resetpass/${encodeURIComponent(data?.email)}`)
         } catch (error) {
             ErrorHandeling(error)
+            setSending(false);
         }
     };
 
@@ -30,7 +35,7 @@ export default function ForgotPassword() {
                         Forgot Password?
                     </h1>
                     <p className="text-gray-600 text-center">
-                        Enter your email and we'll send you a reset link
+                        Enter your email and we'll send you a one-time password (OTP)
                     </p>
                 </div>
 
@@ -53,10 +58,11 @@ export default function ForgotPassword() {
 
                     <button
                         type="submit"
-                        className="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200 flex items-center justify-center"
+                        disabled={sending}
+                        className="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200 flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         <FaLock className="mr-2" />
-                        Get Otp
+                        {sending ? "Sending OTP..." : "Get Otp"}
                     </button>
                 </form>
 

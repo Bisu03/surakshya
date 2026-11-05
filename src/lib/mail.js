@@ -19,6 +19,10 @@ function smtpConfig() {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
     },
+    // Fail fast instead of hanging for minutes when the SMTP port is blocked.
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 30000,
   };
 }
 
