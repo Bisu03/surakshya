@@ -1,23 +1,30 @@
 import nodemailer from "nodemailer";
 
+// Trim and drop wrapping quotes — values pasted into a hosting panel often carry them.
+function env(key) {
+  const value = String(process.env[key] ?? "").trim();
+  const quoted = value.length > 1 && /^(['"]).*\1$/.test(value);
+  return quoted ? value.slice(1, -1) : value;
+}
+
 function smtpConfig() {
-  const port = Number(process.env.SMTP_PORT || 587);
+  const port = Number(env("SMTP_PORT") || 587);
   const required = ["SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM_EMAIL"];
-  const missing = required.filter((key) => !process.env[key]);
+  const missing = required.filter((key) => !env(key));
 
   if (missing.length > 0) {
     throw new Error(`SMTP is not configured. Missing: ${missing.join(", ")}`);
   }
 
   return {
-    host: process.env.SMTP_HOST,
+    host: env("SMTP_HOST"),
     port,
-    secure:
-      process.env.SMTP_SECURE === "true" ||
-      (process.env.SMTP_SECURE !== "false" && port === 465),
+    // Port 465 is implicit TLS only; a plain connection there just times out
+    // ("Greeting never received"), so ignore SMTP_SECURE=false for it.
+    secure: port === 465 || env("SMTP_SECURE").toLowerCase() === "true",
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      user: env("SMTP_USER"),
+      pass: env("SMTP_PASSWORD"),
     },
     // Fail fast instead of hanging for minutes when the SMTP port is blocked.
     connectionTimeout: 15000,
@@ -36,9 +43,9 @@ export async function verifySmtp() {
 
 export async function sendMail({ to, subject, text, html }) {
   const transporter = createMailTransport();
-  const fromName = process.env.SMTP_FROM_NAME || "Hospital Management System";
+  const fromName = env("SMTP_FROM_NAME") || "Hospital Management System";
   return transporter.sendMail({
-    from: `"${fromName}" <${process.env.SMTP_FROM_EMAIL}>`,
+    from: `"${fromName}" <${env("SMTP_FROM_EMAIL")}>`,
     to,
     subject,
     text,
