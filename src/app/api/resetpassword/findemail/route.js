@@ -57,13 +57,15 @@ export async function POST(req) {
                 html: `<p>Your password reset OTP is <strong>${otp}</strong>.</p><p>It expires in 10 minutes.</p>`,
             });
         } catch (error) {
-            console.error("Password reset email delivery failed:", error.message);
+            console.error("Password reset email delivery failed:", error);
             await User.updateOne(
                 { _id: user._id },
                 { $unset: { resetOtpHash: 1, resetOtpExpires: 1, resetOtpRequestedAt: 1 } }
             );
+            // Show the SMTP reason in development so the toast says what went wrong.
+            const detail = process.env.NODE_ENV !== "production" ? ` (${error.message})` : "";
             return NextResponse.json(
-                { success: false, message: "Could not send the OTP email. Please try again later or contact the administrator." },
+                { success: false, message: `Could not send the OTP email. Please try again later or contact the administrator.${detail}` },
                 { status: 503 }
             );
         }
