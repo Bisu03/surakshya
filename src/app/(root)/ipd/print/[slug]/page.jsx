@@ -493,7 +493,8 @@ function IpdAdmissionPrint() {
           }
 
           .af-sheet {
-            margin: 0 !important;
+            /* auto keeps the sheet centred when the print dialog scales it */
+            margin: 0 auto !important;
             break-inside: avoid;
             page-break-inside: avoid;
           }

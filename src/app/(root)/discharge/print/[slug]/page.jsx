@@ -284,7 +284,7 @@ function DischargePrint() {
         }
 
         .ds-section-title.has-bullet::before {
-          content: "\\2022";
+          content: "•";
           position: absolute;
           left: -6mm;
         }
@@ -413,7 +413,8 @@ function DischargePrint() {
           }
 
           .ds-page {
-            margin: 0 !important;
+            /* auto keeps the sheet centred when the print dialog scales it */
+            margin: 0 auto !important;
             break-after: page;
             page-break-after: always;
           }
