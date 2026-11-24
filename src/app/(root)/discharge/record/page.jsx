@@ -17,6 +17,7 @@ import { FaPrint } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import * as XLSX from "xlsx";
+import { formatTime } from "@/lib/timeGenerate";
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
 const DischargeRecord = () => {
@@ -167,7 +168,7 @@ const DischargeRecord = () => {
                         </td>
                   
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {record.discharge_date}/{record.discharge_time}
+                          {record.discharge_date}/{formatTime(record.discharge_time)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap flex space-x-2">
                           <Link

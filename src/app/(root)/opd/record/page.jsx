@@ -18,6 +18,7 @@ import { FaEdit, FaFileExcel, FaPrint } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import * as XLSX from "xlsx";
+import { formatTime } from "@/lib/timeGenerate";
 
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
@@ -96,7 +97,7 @@ const OpdRecord = () => {
         Phone: patient?.patient?.phone_number,
         Age: patient?.patient?.age,
         Date: patient?.consultant_date,
-        Time: patient?.consultant_time,
+        Time: formatTime(patient?.consultant_time),
         Consultant: patient?.consultant?.drname,
         Fees: patient?.opd_fees,
         "Payment Mode": patient?.paidby,
@@ -239,7 +240,7 @@ const OpdRecord = () => {
                         </td>
                         <td className="px-4 py-3">{patient?.patient?.age}</td>
                         <td className="px-4 py-3">
-                          {patient?.consultant_date}/{patient?.consultant_time}
+                          {patient?.consultant_date}/{formatTime(patient?.consultant_time)}
                         </td>
                         <td className="px-4 py-3">
                           {patient?.consultant?.drname}

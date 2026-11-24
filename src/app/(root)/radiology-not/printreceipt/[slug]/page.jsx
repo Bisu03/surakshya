@@ -9,6 +9,7 @@ import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/services/apiService";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import QRCode from "react-qr-code"
 import { amountToWords } from "@/lib/numberToWord";
 
@@ -72,7 +73,7 @@ const PathologyReceipt = () => {
                         <div className="text-xs space-y-0.5 print:text-xs">
                             <p>
                                 <span className="font-semibold"> Date/Time:</span>{" "}
-                                {formatDate(data?.data?.reporting_date)}/{data?.data?.reporting_time}
+                                {formatDate(data?.data?.reporting_date)}/{formatTime(data?.data?.reporting_time)}
                             </p>
                             <p>
                                 <span className="font-semibold">UHID:</span>{" "}

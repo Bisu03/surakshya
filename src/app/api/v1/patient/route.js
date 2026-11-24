@@ -7,6 +7,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import Patient from "@/models/Patient.models"; // Mongoose  model
 import Billing from "@/models/Billing.models"; // Mongoose  model
 import { reserveSequence, releaseSequence } from "@/lib/sequence";
+import { reserveRegId } from "@/lib/regId";
 
 export async function GET(req) {
     await connectDB();
@@ -79,7 +80,7 @@ export async function POST(req) {
         // reg_id is always assigned; mrd_id (UH ID) only for a brand-new patient.
         // (The old "uhid" counter was dropped — Patient has no uh_id field, so it
         // was burning a number every registration for a value that was discarded.)
-        reservedRegId = await reserveSequence("regid");
+        reservedRegId = await reserveRegId(); // skips REGIDs typed in by hand
         if (!body.mrd_id) {
             reservedMrdId = await reserveSequence("mrdid");
         }

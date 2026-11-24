@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { formatTime } from "@/lib/timeGenerate";
 const { Schema } = mongoose;
 
 const opdSchema = new Schema(
@@ -57,6 +58,7 @@ const opdSchema = new Schema(
     },
     consultant_time: {
       type: String,
+      set: formatTime,
     },
     present_complain: {
       type: String,

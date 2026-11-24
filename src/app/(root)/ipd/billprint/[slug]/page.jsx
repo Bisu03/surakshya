@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { fetchData } from "@/services/apiService";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { amountToWords } from "@/lib/numberToWord";
 import { normalizeMedicineCart } from "@/lib/money";
 import { ErrorHandeling } from "@/utils/errorHandling";
@@ -117,7 +118,7 @@ const IpdBill = () => {
               <div className="text-[10px] space-y-0.5 print:text-[9px]">
                 <p>
                   Admit Date/Time: {formatDate(formData?.ipd?.admit_date)}{" "}
-                  {formData?.ipd?.admit_time}
+                  {formatTime(formData?.ipd?.admit_time)}
                 </p>
                 <p>UHID: {formData?.mrd_id}</p>
                 <p>REGID: {formData?.reg_id}</p>
@@ -131,7 +132,7 @@ const IpdBill = () => {
               <div className="text-[10px] space-y-0.5 print:text-[9px]">
                 <p>
                   Discharge Date/Time: {formatDate(formData?.billing_date)}/
-                  {formData?.billing_time}
+                  {formatTime(formData?.billing_time)}
                 </p>
                 <p>Bill: {formData?.bill_no}</p>
               </div>

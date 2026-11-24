@@ -6,6 +6,7 @@ import Tab from "@/components/Tab";
 import Spinner from "@/components/ui/Spinner";
 import { getDate } from "@/lib/currentDate";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { deleteData, fetchData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
 import { ErrorHandeling } from "@/utils/errorHandling";
@@ -109,7 +110,7 @@ const IpdRecord = () => {
         "Patient Name": patient.patient?.fullname,
         Phone: patient.patient?.phone_number,
         "Admit Date": formatDate(patient.admit_date),
-        "Admit Time": patient.admit_time,
+        "Admit Time": formatTime(patient.admit_time),
         Consultant: patient.consultant?.drname,
         "Admit Type": patient.admit_type,
         "Referred By": patient.referr_by,
@@ -244,7 +245,7 @@ const IpdRecord = () => {
                         </td>
                         <td className="px-4 py-3">
                           {formatDate(patient?.admit_date)}/
-                          {patient?.admit_time}
+                          {formatTime(patient?.admit_time)}
                         </td>
                         <td className="px-4 py-3">
                           {patient?.consultant?.drname}

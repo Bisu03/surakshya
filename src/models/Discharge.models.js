@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { formatTime } from "@/lib/timeGenerate";
 const { Schema } = mongoose;
 
 const dischargeSchema = new Schema(
@@ -116,6 +117,7 @@ const dischargeSchema = new Schema(
     },
     discharge_time: {
       type: String,
+      set: formatTime,
     },
   },
   {

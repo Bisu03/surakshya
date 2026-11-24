@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { formatDate } from '@/lib/formateDate';
+import { formatTime } from "@/lib/timeGenerate";
 
 const BillPrint = () => {
     const { data: session } = useSession();
@@ -55,7 +56,7 @@ const BillPrint = () => {
                     </div>
                     <div className="text-right text-xs print:text-2xs">
                         <p>Date: {formatDate(formData?.billing_date)}</p>
-                        <p>Time: {formData?.billing_time}</p>
+                        <p>Time: {formatTime(formData?.billing_time)}</p>
                     </div>
                 </div>
 

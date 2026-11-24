@@ -6,6 +6,7 @@ import Tab from "@/components/Tab";
 import Spinner from "@/components/ui/Spinner";
 import { formatDate } from "@/lib/formateDate";
 import { hasPermission } from "@/lib/permissions";
+import { toTimeInput } from "@/lib/timeGenerate";
 import { fetchData, updateData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
 import { ErrorHandeling } from "@/utils/errorHandling";
@@ -173,7 +174,9 @@ function CreateDischarge() {
         data?.follow_up ||
         (data?.review_date ? formatDate(data.review_date) : ""),
       discharge_date: data?.discharge_date || "",
-      discharge_time: data?.discharge_time || "",
+      // the time picker needs 24-hour "HH:mm"; keep unrecognised text as-is
+      discharge_time:
+        toTimeInput(data?.discharge_time) || data?.discharge_time || "",
     };
   };
 

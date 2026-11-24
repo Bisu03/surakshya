@@ -4,6 +4,7 @@ import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
 import HospitalHeader from "@/components/ui/HospitalHeader";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { HOSPITAL } from "@/lib/hospitalBrand";
 import { fetchData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
@@ -70,7 +71,7 @@ const PathologyPrint = () => {
                         <div className="text-xs space-y-0.5 print:text-xs">
                             <p>
                                 <span className="font-semibold"> Date/Time:</span>{" "}
-                                {formatDate(data?.data?.reporting_date)}/{data?.data?.reporting_time}
+                                {formatDate(data?.data?.reporting_date)}/{formatTime(data?.data?.reporting_time)}
                             </p>
                             <p>
                                 <span className="font-semibold">UHID:</span>{" "}

@@ -4,6 +4,7 @@ import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
 import HospitalHeader from "@/components/ui/HospitalHeader";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { fetchData } from "@/services/apiService";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -58,7 +59,7 @@ const PathologyPrint = ({ data }) => {
           <div className="col-span-2 border-r border-gray-400 p-1">
             <span className="font-semibold">Date/Time:</span>{" "}
             {formatDate(data?.reporting_date) || "N/A"}{" "}
-            {data?.reporting_time || "N/A"}
+            {formatTime(data?.reporting_time) || "N/A"}
           </div>
         </div>
       </div>
@@ -316,7 +317,7 @@ const RadiologyPrint = ({ data }) => (
         <div className="col-span-2 border-r border-gray-400 p-1">
           <span className="font-semibold">Date/Time:</span>{" "}
           {formatDate(data?.reporting_date) || "N/A"}{" "}
-          {data?.reporting_time || "N/A"}
+          {formatTime(data?.reporting_time) || "N/A"}
         </div>
       </div>
     </div>

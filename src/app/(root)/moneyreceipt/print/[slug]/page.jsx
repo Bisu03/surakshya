@@ -5,6 +5,7 @@ import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
 import HospitalHeader from "@/components/ui/HospitalHeader";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { amountToWords } from "@/lib/numberToWord";
 import { fetchData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
@@ -110,12 +111,12 @@ const PrintReceipt = () => {
             <p>
               <span className="font-semibold">Admission Date:</span>{" "}
               {formatDate(data?.data?.admit_date)}{" "}
-              {data?.data?.admit_time || "-"}
+              {formatTime(data?.data?.admit_time) || "-"}
             </p>
             <p>
               <span className="font-semibold">Discharge Date:</span>{" "}
               {formatDate(data?.data?.billing_date)}{" "}
-              {data?.data?.billing_time || "-"}
+              {formatTime(data?.data?.billing_time) || "-"}
             </p>
           </div>
         </div>

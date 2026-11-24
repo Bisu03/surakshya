@@ -4,6 +4,7 @@ import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
 import HospitalHeader from "@/components/ui/HospitalHeader";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { fetchData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -58,7 +59,7 @@ const OpdPrint = () => {
               <div>
                 <span className="font-semibold">Date & Time:</span>{" "}
                 {formatDate(data?.data?.consultant_date)}{" "}
-                {data?.data?.consultant_time}
+                {formatTime(data?.data?.consultant_time)}
               </div>
               <div>
                 <span className="font-semibold">Age:</span>{" "}

@@ -5,6 +5,7 @@ import Loading from "@/components/Loading";
 import Tab from "@/components/Tab";
 import Spinner from "@/components/ui/Spinner";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { generateUnique } from "@/lib/uniqueNumber";
 import { fetchData, updateData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
@@ -615,7 +616,7 @@ const PathologyReading = () => {
                     },
                     {
                       label: "Reporting Time",
-                      value: patientInfo?.reporting_time,
+                      value: formatTime(patientInfo?.reporting_time),
                     },
                     { label: "Referred By", value: patientInfo?.referr_by },
                   ].map(

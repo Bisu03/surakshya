@@ -10,7 +10,7 @@ import Tab from "@/components/Tab";
 import Spinner from "@/components/ui/Spinner";
 import { getDate } from "@/lib/currentDate";
 import { formatDate } from "@/lib/formateDate";
-import { formattedTime } from "@/lib/timeGenerate";
+import { formattedTime, formatTime } from "@/lib/timeGenerate";
 import { fetchData, updateData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
 import { ErrorHandeling } from "@/utils/errorHandling";
@@ -393,7 +393,7 @@ const IpdService = () => {
                       <div>
                         {formData?.ipd?.admit_date
                           ? `${formatDate(formData?.ipd?.admit_date)} ${
-                              formData?.ipd?.admit_time
+                              formatTime(formData?.ipd?.admit_time)
                             }`
                           : "-"}
                       </div>

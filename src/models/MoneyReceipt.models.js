@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { formatTime } from "@/lib/timeGenerate";
 
 const { Schema } = mongoose;
 
@@ -12,9 +13,9 @@ const moneyReceiptSchema = new Schema({
   mrd_id: { type: String },
   rec_no: { type: String, unique: true, },
   billing_date: { type: String},
-  billing_time: { type: String },
+  billing_time: { type: String, set: formatTime },
   admit_date: { type: String,},
-  admit_time: { type: String },
+  admit_time: { type: String, set: formatTime },
   amount: {
     type: Number,
   },

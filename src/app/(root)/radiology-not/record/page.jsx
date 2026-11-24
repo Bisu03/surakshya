@@ -14,6 +14,7 @@ import Link from "next/link";
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { FaPrint } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { formatTime } from "@/lib/timeGenerate";
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
 const PathologyRecord = () => {
@@ -117,7 +118,7 @@ const PathologyRecord = () => {
                                                 </td>
                                                 <td className="px-4 py-3">{patient?.patient?.age}</td>
                                                 <td className="px-4 py-3">
-                                                    {patient?.reporting_date}/{patient?.reporting_time}
+                                                    {patient?.reporting_date}/{formatTime(patient?.reporting_time)}
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     {patient?.amount?.netTotal}/- paid by {patient?.paidby}

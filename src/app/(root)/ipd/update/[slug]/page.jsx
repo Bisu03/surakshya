@@ -10,6 +10,7 @@ import Loading from "@/components/Loading";
 import { getCompactAge } from "@/lib/ageCount";
 import { ADMISSION_TYPE_OPTIONS, PAYMENT_MODE_OPTIONS } from "@/lib/healthScheme";
 import { hasPermission } from "@/lib/permissions";
+import { toTimeInput } from "@/lib/timeGenerate";
 import { useSession } from "next-auth/react";
 
 const patientFields = [
@@ -151,6 +152,8 @@ export default function UpdateIpdAdmission() {
           ...ipd,
           ...ipd.patient,
           consultant: ipd.consultant?._id || "",
+          // the time picker needs 24-hour "HH:mm"; keep unrecognised text as-is
+          admit_time: toTimeInput(ipd.admit_time) || ipd.admit_time || "",
           reg_id: ipd.reg_id,
           mrd_id: ipd.mrd_id,
         });
@@ -262,7 +265,7 @@ export default function UpdateIpdAdmission() {
                 <option value="">Select consultant</option>
                 {doctors.map((doctor) => (
                   <option key={doctor._id} value={doctor._id}>
-                    {doctor.drname} {doctor.category ? `(${doctor.category})` : ""}
+                    {doctor.drname} {doctor.drinfo || doctor.category ? `(${doctor.drinfo || doctor.category})` : ""}
                   </option>
                 ))}
               </select>

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { formatTime } from "@/lib/timeGenerate";
 const { Schema } = mongoose;
 
 const paymentSchema = new Schema(
@@ -27,7 +28,7 @@ const labtestSchema = new Schema(
     mrd_id: { type: String, required: true },
     reg_id: { type: String },
     bill_no: { type: String },
-    reporting_time: { type: String },
+    reporting_time: { type: String, set: formatTime },
     reporting_date: { type: String },
     admited_in: { type: String },
     patient: { type: mongoose.Schema.Types.ObjectId, ref: "patient_registration" },

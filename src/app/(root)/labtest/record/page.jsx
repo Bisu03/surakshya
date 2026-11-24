@@ -18,6 +18,7 @@ import { FaFileExcel, FaPrint } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import * as XLSX from "xlsx";
+import { formatTime } from "@/lib/timeGenerate";
 
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
@@ -355,7 +356,7 @@ const PathologyRecord = () => {
                               </Link>
                             </td>
                             <td className="px-4 py-3">
-                              {patient?.reporting_date}/ {patient?.reporting_time}
+                              {patient?.reporting_date}/ {formatTime(patient?.reporting_time)}
                             </td>
                             <td className="px-4 py-3">
                               {patient?.consultant?.drname}

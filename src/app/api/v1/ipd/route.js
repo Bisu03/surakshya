@@ -8,6 +8,7 @@ import "@/models/Doctor.models";
 import Ipd from "@/models/Ipd.models";
 import Patient from "@/models/Patient.models";
 import { reserveSequence, releaseSequence } from "@/lib/sequence";
+import { isRegIdTaken, parseRegId, reserveRegId } from "@/lib/regId";
 
 export async function GET(req) {
   try {
@@ -133,10 +134,27 @@ export async function POST(req) {
       );
     }
 
+    // A hand-typed REGID is used as-is when it is free; blank means automatic.
+    const hasManualRegId = String(body.reg_id ?? "").trim() !== "";
+    const manualRegId = hasManualRegId ? parseRegId(body.reg_id) : null;
+    if (hasManualRegId && manualRegId === null) {
+      return NextResponse.json(
+        { success: false, message: "REGID must be a positive whole number" },
+        { status: 400 }
+      );
+    }
+    if (manualRegId !== null && (await isRegIdTaken(manualRegId))) {
+      return NextResponse.json(
+        { success: false, message: `REGID ${manualRegId} is already used. Enter another number or leave it blank.` },
+        { status: 409 }
+      );
+    }
+
     // Reserve sequence numbers only after all validation above has passed, so a
     // 400 never burns a number. Reserved values are reclaimed on any failure
     // below (catch block + the existing-patient 404 path).
-    reservedRegId = await reserveSequence("regid");
+    if (manualRegId === null) reservedRegId = await reserveRegId();
+    const regId = manualRegId ?? reservedRegId;
     if (!body.mrd_id) {
       reservedMrdId = await reserveSequence("mrdid");
     }
@@ -186,14 +204,14 @@ export async function POST(req) {
     } else {
       patient = await Patient.create({
         ...patientFields,
-        reg_id: reservedRegId,
+        reg_id: regId,
         mrd_id: reservedMrdId,
       });
       createdPatientId = patient._id;
     }
 
     const ipd = await Ipd.create({
-      reg_id: reservedRegId,
+      reg_id: regId,
       mrd_id: patient.mrd_id,
       patient: patient._id,
       consultant: consultantId,
@@ -226,9 +244,20 @@ export async function POST(req) {
     });
     createdIpdId = ipd._id;
 
+    if (manualRegId !== null) {
+      // Two admissions can pass the check above at the same moment with the
+      // same typed number; the earlier one keeps it and this one is undone.
+      const first = await Ipd.findOne({ reg_id: regId }).sort({ _id: 1 }).select("_id").lean();
+      if (!first?._id.equals(ipd._id)) {
+        const conflict = new Error(`REGID ${regId} was just used by another admission. Enter another number or leave it blank.`);
+        conflict.status = 409;
+        throw conflict;
+      }
+    }
+
     const consultant = body.consultant;
     await Billing.create({
-      reg_id: reservedRegId,
+      reg_id: regId,
       mrd_id: patient.mrd_id,
       patient: patient._id,
       ipd: ipd._id,
@@ -247,7 +276,7 @@ export async function POST(req) {
       },
     });
     await Discharge.create({
-      reg_id: reservedRegId,
+      reg_id: regId,
       mrd_id: patient.mrd_id,
       patient: patient._id,
       ipd: ipd._id,
@@ -274,9 +303,10 @@ export async function POST(req) {
     // Reclaim the reserved numbers so a failed admission does not skip them.
     await releaseSequence("mrdid", reservedMrdId);
     await releaseSequence("regid", reservedRegId);
+    const conflict = error.status === 409;
     return NextResponse.json(
-      { success: false, message: "Unable to admit patient", error: error.message },
-      { status: 500 }
+      { success: false, message: conflict ? error.message : "Unable to admit patient", error: error.message },
+      { status: conflict ? 409 : 500 }
     );
   }
 }

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/services/apiService";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import QRCode from "react-qr-code";
 import { amountToWords } from "@/lib/numberToWord";
 
@@ -68,7 +69,7 @@ const PrintAdvance = () => {
             <div className="text-[10px] space-y-0.5 print:text-[9px]">
               <p>
                 {formatDate(formData?.ipd?.admit_date)}{" "}
-                {formData?.ipd?.admit_time}
+                {formatTime(formData?.ipd?.admit_time)}
               </p>
               <p>UHID: {formData?.mrd_id}</p>
               <p>REGID: {formData?.reg_id}</p>

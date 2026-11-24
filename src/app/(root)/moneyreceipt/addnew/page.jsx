@@ -10,6 +10,7 @@ import PrintUi from "@/components/ui/PrintUi";
 import Spinner from "@/components/ui/Spinner";
 import { getDate } from "@/lib/currentDate";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { amountToWords } from "@/lib/numberToWord";
 import { createData, fetchData, updateData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
@@ -247,7 +248,7 @@ const MoneyReceipt = () => {
                       <div>
                         {formData?.admit_date
                           ? `${formatDate(formData?.admit_date)} ${
-                              formData?.admit_time
+                              formatTime(formData?.admit_time)
                             }`
                           : "-"}
                       </div>
@@ -257,7 +258,7 @@ const MoneyReceipt = () => {
                       <div>
                         {formData?.billing_date
                           ? `${formatDate(formData?.billing_date)} ${
-                              formData?.billing_time
+                              formatTime(formData?.billing_time)
                             }`
                           : "-"}
                       </div>

@@ -18,6 +18,7 @@ import { FaFileExcel, FaPrint } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import * as XLSX from "xlsx";
+import { formatTime } from "@/lib/timeGenerate";
 
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
@@ -63,7 +64,7 @@ const MoneyReceiptRecord = () => {
         "UHID": receipt?.mrd_id,
         "Patient Name": receipt?.patient?.fullname,
         "Billing Date": receipt?.billing_date,
-        "Billing Time": receipt?.billing_time,
+        "Billing Time": formatTime(receipt?.billing_time),
         Amount: receipt?.amount,
         "Payment Method": receipt?.paidby,
       }))
@@ -169,7 +170,7 @@ const MoneyReceiptRecord = () => {
                           {receipt?.patient?.fullname}
                         </td>
                         <td className="px-4 py-3">
-                          {receipt?.billing_date} {receipt?.billing_time}
+                          {receipt?.billing_date} {formatTime(receipt?.billing_time)}
                         </td>
                         <td className="px-4 py-3">₹{receipt?.amount}</td>
                         <td className="px-4 py-3">{receipt?.paidby}</td>

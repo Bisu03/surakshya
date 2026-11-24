@@ -3,6 +3,7 @@
 import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { HOSPITAL } from "@/lib/hospitalBrand";
 import { fetchData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
@@ -112,6 +113,13 @@ function AdmissionSheet({ lang, admission, isSecond }) {
   const t = TEXT[lang];
   const patient = admission.patient || {};
   const consultant = admission.consultant || {};
+  // "Dr Name (qualifications)", the same as the lab report and receipt prints
+  const doctor = [
+    clean(consultant.drname),
+    clean(consultant.drinfo) && `(${clean(consultant.drinfo)})`,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <main className={`af-sheet af-${lang} ${isSecond ? "is-second" : ""}`}>
@@ -156,10 +164,10 @@ function AdmissionSheet({ lang, admission, isSecond }) {
             label={t.admissionDate}
             value={formatDate(clean(admission.admit_date))}
           />
-          <Line label={t.time} value={admission.admit_time} />
+          <Line label={t.time} value={formatTime(admission.admit_time)} />
         </div>
         <Line label={t.diagnosis} value={admission.provisional_diagnosis} />
-        <Line label={t.doctor} value={consultant.drname} />
+        <Line label={t.doctor} value={doctor} />
       </section>
 
       <ul className="af-rules">

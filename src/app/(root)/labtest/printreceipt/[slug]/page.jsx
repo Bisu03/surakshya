@@ -11,6 +11,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/services/apiService";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { amountToWords } from "@/lib/numberToWord";
 import QRCode from "react-qr-code";
 
@@ -205,7 +206,7 @@ const LabReceipt = () => {
                       <p className="mb-1 print:mb-0.5 print:mt-0">
                         <span className="font-semibold">Date/Time:</span>{" "}
                         {formatDate(pathologyData?.reporting_date)} /{" "}
-                        {pathologyData?.reporting_time}
+                        {formatTime(pathologyData?.reporting_time)}
                       </p>
                       {pathologyData?.reg_id && (
                         <p className="mb-1 print:mb-0.5 print:mt-0">

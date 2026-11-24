@@ -30,6 +30,7 @@ import { FaPlusCircle } from "react-icons/fa";
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
 const initialAdmission = {
+  reg_id: "",
   mrd_id: "",
   fullname: "",
   father_husband_name: "",
@@ -161,11 +162,62 @@ function IpdAdmission() {
   const [searching, setSearching] = useState(false);
   const [saving, setSaving] = useState(false);
   const submittingRef = useRef(false);
+  // Hand-typed REGID: result of the live availability check for `value`.
+  const [regIdCheck, setRegIdCheck] = useState({ value: "", status: "", message: "" });
+  const [nextRegId, setNextRegId] = useState(null);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
   };
+
+  const handleRegIdChange = (event) => {
+    const reg_id = event.target.value.replace(/\D/g, "");
+    setForm((current) => ({ ...current, reg_id }));
+  };
+
+  useEffect(() => {
+    fetchData("/ipd/regid")
+      .then((result) => setNextRegId(result.next))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const value = form.reg_id;
+    if (!value) return;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        const result = await fetchData(`/ipd/regid?value=${encodeURIComponent(value)}`);
+        if (cancelled) return;
+        if (result.next) setNextRegId(result.next);
+        setRegIdCheck({
+          value,
+          status: result.available ? "available" : "taken",
+          message: result.message,
+        });
+      } catch {
+        if (!cancelled) {
+          setRegIdCheck({
+            value,
+            status: "error",
+            message: "Could not check this REGID right now. It will be checked again when you admit.",
+          });
+        }
+      }
+    }, 400);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [form.reg_id]);
+
+  // A result only counts for the number currently in the box.
+  const regIdStatus = !form.reg_id
+    ? "auto"
+    : regIdCheck.value === form.reg_id
+      ? regIdCheck.status
+      : "checking";
 
   const handleDobChange = (event) => {
     const dob = event.target.value;
@@ -222,7 +274,7 @@ function IpdAdmission() {
           const response = await fetchData(`/doctor?drname=${inputValue}`);
           return (response.data || []).map((doctor) => ({
             value: doctor,
-            label: `${doctor.drname}${doctor.category ? ` (${doctor.category})` : ""}`,
+            label: `${doctor.drname}${doctor.drinfo || doctor.category ? ` (${doctor.drinfo || doctor.category})` : ""}`,
           }));
         } catch (error) {
           ErrorHandeling(error);
@@ -247,6 +299,12 @@ function IpdAdmission() {
     if (!form.consent_accepted) {
       return toast.error("Please acknowledge the admission consent");
     }
+    if (regIdStatus === "checking") {
+      return toast.error("Still checking the REGID, please wait a moment");
+    }
+    if (regIdStatus === "taken") {
+      return toast.error(`${regIdCheck.message}. Enter another number or leave it blank.`);
+    }
 
     // Synchronous re-entrancy guard: blocks F5 key-repeat / double-click
     // bursts from firing multiple POSTs before React re-renders the disabled
@@ -265,11 +323,18 @@ function IpdAdmission() {
       router.push(`/ipd/print/${response.data.reg_id}`);
     } catch (error) {
       ErrorHandeling(error);
+      if (error?.response?.status === 409) {
+        setRegIdCheck({
+          value: form.reg_id,
+          status: "taken",
+          message: `REGID ${form.reg_id} is already used`,
+        });
+      }
     } finally {
       submittingRef.current = false;
       setSaving(false);
     }
-  }, [consultant, form, queryClient, router, session?.user?.username]);
+  }, [consultant, form, queryClient, regIdCheck.message, regIdStatus, router, session?.user?.username]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -317,6 +382,43 @@ function IpdAdmission() {
             </Heading>
 
             <Section title="Patient Identification">
+              <label className="block space-y-1">
+                <span className="text-sm font-medium text-gray-700">REGID</span>
+                <input
+                  name="reg_id"
+                  value={form.reg_id}
+                  onChange={handleRegIdChange}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  placeholder={nextRegId ? `Auto: ${nextRegId}` : "Auto"}
+                  className={`${fieldClass} ${
+                    regIdStatus === "available"
+                      ? "border-green-500"
+                      : regIdStatus === "taken"
+                        ? "border-red-500"
+                        : ""
+                  }`}
+                />
+                <span
+                  className={`block text-xs ${
+                    regIdStatus === "available"
+                      ? "text-green-600"
+                      : regIdStatus === "taken"
+                        ? "text-red-600"
+                        : regIdStatus === "error"
+                          ? "text-amber-600"
+                          : "text-gray-500"
+                  }`}
+                >
+                  {regIdStatus === "auto" &&
+                    `Leave blank to use the next number automatically${nextRegId ? ` (${nextRegId})` : ""}`}
+                  {regIdStatus === "checking" && "Checking..."}
+                  {regIdStatus === "available" && `✓ ${regIdCheck.message}`}
+                  {regIdStatus === "taken" &&
+                    `⚠ ${regIdCheck.message}. Enter another number or leave it blank.`}
+                  {regIdStatus === "error" && regIdCheck.message}
+                </span>
+              </label>
               <Field label="Full Name" name="fullname" value={form.fullname} onChange={handleChange} required />
               <Field label="Father / Husband Name" name="father_husband_name" value={form.father_husband_name} onChange={handleChange} required />
               <Field label="Mobile Number" name="phone_number" value={form.phone_number} onChange={handleChange} required />

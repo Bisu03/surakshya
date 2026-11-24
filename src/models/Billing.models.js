@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { formatTime } from "@/lib/timeGenerate";
 const { Schema } = mongoose;
 
 const billingSchema = new Schema({
@@ -56,6 +57,7 @@ const billingSchema = new Schema({
     },
     billing_time: {
         type: String,
+        set: formatTime,
     },
     isDone: {
         type: Boolean,

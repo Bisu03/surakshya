@@ -3,6 +3,7 @@
 import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
 import { formatDate } from "@/lib/formateDate";
+import { formatTime } from "@/lib/timeGenerate";
 import { HOSPITAL } from "@/lib/hospitalBrand";
 import { fetchData } from "@/services/apiService";
 import { withAuth } from "@/services/withAuth";
@@ -123,13 +124,13 @@ function DischargePrint() {
 
   const admittedOn = [
     formatDate(clean(record.admit_date) || clean(ipd.admit_date)),
-    clean(ipd.admit_time),
+    formatTime(clean(ipd.admit_time)),
   ]
     .filter(Boolean)
     .join("  ");
   const dischargedOn = [
     formatDate(clean(record.discharge_date)),
-    clean(record.discharge_time),
+    formatTime(clean(record.discharge_time)),
   ]
     .filter(Boolean)
     .join("  ");
