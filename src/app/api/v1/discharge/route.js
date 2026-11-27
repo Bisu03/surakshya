@@ -89,7 +89,7 @@ export async function POST(req) {
     const regId = String(body.reg_id || "").trim();
     if (!/^\d+$/.test(regId)) {
       return NextResponse.json(
-        { success: false, message: "REGID must be a valid number" },
+        { success: false, message: "IPD ID must be a valid number" },
         { status: 400 }
       );
     }

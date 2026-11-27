@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongoConnection";
+import { requirePermission } from "@/lib/serverAuth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
@@ -119,6 +120,8 @@ export async function PUT(req) {
 export async function DELETE(req) {
   // Connect to the database
   await connectDB();
+  const authorization = await requirePermission("expenses", "delete");
+  if (authorization.response) return authorization.response;
 
   // Get the current session from next-auth
   const session = await getServerSession(authOptions);

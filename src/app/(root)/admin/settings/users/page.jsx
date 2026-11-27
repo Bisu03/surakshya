@@ -75,6 +75,97 @@ function PermissionEditor({ permissions, onChange, disabled }) {
   );
 }
 
+// Shows the mail settings the server is really using and the exact SMTP error,
+// so email problems on the deployed server can be fixed without its logs.
+function EmailCheck() {
+  const [busy, setBusy] = useState("");
+  const [result, setResult] = useState(null);
+
+  const run = async (kind) => {
+    setBusy(kind);
+    try {
+      const response =
+        kind === "send"
+          ? await axios.post("/api/v1/admin/smtp")
+          : await axios.get("/api/v1/admin/smtp");
+      setResult(response.data);
+    } catch (error) {
+      setResult(
+        error.response?.data || { success: false, message: error.message }
+      );
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const config = result?.config;
+  return (
+    <section className="mt-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 className="text-lg font-semibold">Email check</h2>
+          <p className="text-sm text-gray-500">
+            Password reset and new-user emails use these settings.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => run("check")} disabled={!!busy} className="btn btn-outline btn-sm">
+            {busy === "check" ? "Checking..." : "Check connection"}
+          </button>
+          <button onClick={() => run("send")} disabled={!!busy} className="btn btn-primary btn-sm">
+            {busy === "send" ? "Sending..." : "Send test email to me"}
+          </button>
+        </div>
+      </div>
+
+      {result && (
+        <div
+          className={`mt-3 rounded-lg border p-3 text-sm ${
+            result.success
+              ? "border-green-300 bg-green-50 text-green-800"
+              : "border-red-300 bg-red-50 text-red-800"
+          }`}
+        >
+          <p className="font-semibold">
+            {result.success ? "✓ " : "✗ "}
+            {result.message}
+          </p>
+          {result.error && (
+            <p className="mt-1 break-words font-mono text-xs">
+              {result.code ? `[${result.code}] ` : ""}
+              {result.error}
+            </p>
+          )}
+          {result.hint && <p className="mt-1">{result.hint}</p>}
+        </div>
+      )}
+
+      {config && (
+        <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm md:grid-cols-3">
+          {[
+            ["SMTP_HOST", config.host],
+            ["SMTP_PORT", config.port],
+            ["Encryption", config.secure ? "TLS (secure)" : "STARTTLS / plain"],
+            ["SMTP_USER", config.user],
+            ["SMTP_FROM_EMAIL", config.from],
+            ["SMTP_PASSWORD", config.passwordSet ? "set" : "NOT SET"],
+          ].map(([label, value]) => (
+            <div key={label} className="min-w-0">
+              <dt className="text-xs text-gray-500">{label}</dt>
+              <dd className="truncate font-medium">{value || "NOT SET"}</dd>
+            </div>
+          ))}
+          {config.missing?.length > 0 && (
+            <p className="col-span-full text-red-700">
+              Missing: {config.missing.join(", ")}
+            </p>
+          )}
+        </dl>
+      )}
+    </section>
+  );
+}
+
 export default function UsersPage() {
   const { data: session } = useSession();
   const [users, setUsers] = useState(null);
@@ -301,6 +392,8 @@ export default function UsersPage() {
           </tbody>
         </table>
       </div>
+
+      {hasPermission(session?.user, "users", "manage_permissions") && <EmailCheck />}
     </div>
   );
 }

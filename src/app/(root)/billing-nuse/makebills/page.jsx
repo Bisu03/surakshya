@@ -163,7 +163,7 @@ const MakeBills = () => {
                                     name="RegNo"
                                     value={RegNo}
                                     onChange={(e) => setRegNo(e.target.value)}
-                                    placeholder="Enter REGID"
+                                    placeholder="Enter IPD ID"
                                 />
                                 <button onClick={handleGetpatientinfor} className="btn btn-secondary"> Get </button>
                             </div>

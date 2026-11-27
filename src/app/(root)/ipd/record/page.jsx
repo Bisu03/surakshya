@@ -106,7 +106,7 @@ const IpdRecord = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       data.data.map((patient) => ({
         "UHID": patient.mrd_id,
-        "REGID": patient.reg_id,
+        "IPD ID": patient.reg_id,
         "Patient Name": patient.patient?.fullname,
         Phone: patient.patient?.phone_number,
         "Admit Date": formatDate(patient.admit_date),
@@ -140,7 +140,7 @@ const IpdRecord = () => {
                   >
                     <option value="date">Search by Date</option>
                     <option value="name">Search by Name</option>
-                    <option value="regId">Search by REGID</option>
+                    <option value="regId">Search by IPD ID</option>
                   </select>
 
                   {/* Search Input or Date Filters */}
@@ -164,7 +164,7 @@ const IpdRecord = () => {
                     <input
                       type="text"
                       placeholder={`Search by ${
-                        searchType === "name" ? "name" : "REGID"
+                        searchType === "name" ? "name" : "IPD ID"
                       }...`}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -222,7 +222,7 @@ const IpdRecord = () => {
                   <thead>
                     <tr className="bg-secondary text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       <th className="px-4 py-3">UHID</th>
-                      <th className="px-4 py-3">REGID</th>
+                      <th className="px-4 py-3">IPD ID</th>
                       <th className="px-4 py-3">Full Name</th>
                       <th className="px-4 py-3">Phone</th>
                       <th className="px-4 py-3">Admit Date & Time</th>

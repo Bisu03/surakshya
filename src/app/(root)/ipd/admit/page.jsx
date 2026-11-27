@@ -162,7 +162,7 @@ function IpdAdmission() {
   const [searching, setSearching] = useState(false);
   const [saving, setSaving] = useState(false);
   const submittingRef = useRef(false);
-  // Hand-typed REGID: result of the live availability check for `value`.
+  // Hand-typed IPD ID: result of the live availability check for `value`.
   const [regIdCheck, setRegIdCheck] = useState({ value: "", status: "", message: "" });
   const [nextRegId, setNextRegId] = useState(null);
 
@@ -201,7 +201,7 @@ function IpdAdmission() {
           setRegIdCheck({
             value,
             status: "error",
-            message: "Could not check this REGID right now. It will be checked again when you admit.",
+            message: "Could not check this IPD ID right now. It will be checked again when you admit.",
           });
         }
       }
@@ -300,7 +300,7 @@ function IpdAdmission() {
       return toast.error("Please acknowledge the admission consent");
     }
     if (regIdStatus === "checking") {
-      return toast.error("Still checking the REGID, please wait a moment");
+      return toast.error("Still checking the IPD ID, please wait a moment");
     }
     if (regIdStatus === "taken") {
       return toast.error(`${regIdCheck.message}. Enter another number or leave it blank.`);
@@ -327,7 +327,7 @@ function IpdAdmission() {
         setRegIdCheck({
           value: form.reg_id,
           status: "taken",
-          message: `REGID ${form.reg_id} is already used`,
+          message: `IPD ID ${form.reg_id} is already used`,
         });
       }
     } finally {
@@ -383,7 +383,7 @@ function IpdAdmission() {
 
             <Section title="Patient Identification">
               <label className="block space-y-1">
-                <span className="text-sm font-medium text-gray-700">REGID</span>
+                <span className="text-sm font-medium text-gray-700">IPD ID</span>
                 <input
                   name="reg_id"
                   value={form.reg_id}

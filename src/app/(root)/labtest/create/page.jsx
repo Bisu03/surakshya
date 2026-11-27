@@ -557,7 +557,7 @@ const CreateLabtest = () => {
                     <input type="text" name="address" value={ServiceData?.address} onChange={handleChange} className="input input-bordered" />
                   </div>
                   <div className="form-control">
-                    <label className="label"><span className="label-text">REGID <span className="text-red-500">(OPD: leave blank)</span></span></label>
+                    <label className="label"><span className="label-text">IPD ID <span className="text-red-500">(OPD: leave blank)</span></span></label>
                     <input type="text" name="reg_id" value={ServiceData?.reg_id} onChange={handleChange} className="input input-bordered" />
                   </div>
                   <div className="form-control">

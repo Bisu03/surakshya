@@ -12,6 +12,7 @@ import { SuccessHandling } from "@/utils/successHandling";
 import { TabLinks } from "@/utils/tablinks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 import Link from "next/link";
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { FaEdit, FaFileExcel, FaPrint } from "react-icons/fa";
@@ -24,6 +25,7 @@ const MiddleSection = lazy(() => import("@/components/Middlesection"));
 const IpdBillRecord = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const canDelete = hasPermission(session?.user, "ipd_billing", "delete");
   const [search, setSearch] = useState("");
   const contentRef = useRef(null);
 
@@ -102,7 +104,7 @@ const IpdBillRecord = () => {
         "Bill No": bill.bill_no,
         "Patient Name": bill.patient?.fullname,
         "UHID": bill.mrd_id,
-        "REGID": bill.reg_id,
+        "IPD ID": bill.reg_id,
         "Billing Date": bill.billing_date,
         "Total Amount": bill.amount.total,
         Discount: bill.amount.discount,
@@ -251,7 +253,7 @@ const IpdBillRecord = () => {
                       <th className="px-4 py-3">Bill No</th>
                       <th className="px-4 py-3">Patient Name</th>
                       <th className="px-4 py-3">UHID</th>
-                      <th className="px-4 py-3">REGID</th>
+                      <th className="px-4 py-3">IPD ID</th>
                       <th className="px-4 py-3">Billing Date</th>
                       <th className="px-4 py-3">Total Amount</th>
                       <th className="px-4 py-3">Discount</th>
@@ -310,7 +312,7 @@ const IpdBillRecord = () => {
                               <FaPrint />
                             </Link>
                           )}
-                          {session?.user?.role === "Admin" && (
+                          {canDelete && (
                             <button
                               onClick={() => handleDelete(bill._id, bill.ipd)}
                               className="btn btn-error"

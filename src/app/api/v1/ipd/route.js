@@ -26,7 +26,7 @@ export async function GET(req) {
     if (id) {
       if (!/^\d+$/.test(id)) {
         return NextResponse.json(
-          { success: false, message: "REGID must be a valid number" },
+          { success: false, message: "IPD ID must be a valid number" },
           { status: 400 }
         );
       }
@@ -139,13 +139,13 @@ export async function POST(req) {
     const manualRegId = hasManualRegId ? parseRegId(body.reg_id) : null;
     if (hasManualRegId && manualRegId === null) {
       return NextResponse.json(
-        { success: false, message: "REGID must be a positive whole number" },
+        { success: false, message: "IPD ID must be a positive whole number" },
         { status: 400 }
       );
     }
     if (manualRegId !== null && (await isRegIdTaken(manualRegId))) {
       return NextResponse.json(
-        { success: false, message: `REGID ${manualRegId} is already used. Enter another number or leave it blank.` },
+        { success: false, message: `IPD ID ${manualRegId} is already used. Enter another number or leave it blank.` },
         { status: 409 }
       );
     }
@@ -249,7 +249,7 @@ export async function POST(req) {
       // same typed number; the earlier one keeps it and this one is undone.
       const first = await Ipd.findOne({ reg_id: regId }).sort({ _id: 1 }).select("_id").lean();
       if (!first?._id.equals(ipd._id)) {
-        const conflict = new Error(`REGID ${regId} was just used by another admission. Enter another number or leave it blank.`);
+        const conflict = new Error(`IPD ID ${regId} was just used by another admission. Enter another number or leave it blank.`);
         conflict.status = 409;
         throw conflict;
       }

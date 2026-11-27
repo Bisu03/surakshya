@@ -26,7 +26,7 @@ const TEXT = {
     badge: "ভর্তির ফর্ম",
     hospitalName: HOSPITAL.nameBn,
     places: HOSPITAL.placesBn.join(" ● "),
-    regNo: "রেজি নং -",
+    ipdId: "আই.পি.ডি নং",
     license: "লাইসেন্স নং",
     patientName: "রোগীর নাম - শ্রী / শ্রীমতী",
     age: "বয়স",
@@ -65,7 +65,7 @@ const TEXT = {
     badge: "ADMISSION FORM",
     hospitalName: HOSPITAL.name,
     places: HOSPITAL.places.join(" ● "),
-    regNo: "REGID -",
+    ipdId: "IPD ID",
     license: "License No.",
     patientName: "Patient's Name - Sri / Smt.",
     age: "Age",
@@ -138,9 +138,6 @@ function AdmissionSheet({ lang, admission, isSecond }) {
           <span className="af-badge">{t.badge}</span>
           <h1 className="af-hospital-name">{t.hospitalName}</h1>
           <p className="af-places">{t.places}</p>
-          <p className="af-reg">
-            {t.regNo} <strong>{clean(admission.reg_id)}</strong>
-          </p>
         </div>
         <p className="af-phone">
           Ph.- {HOSPITAL.phone}, {HOSPITAL.mobile}
@@ -166,12 +163,13 @@ function AdmissionSheet({ lang, admission, isSecond }) {
           <Line label={t.ps} value={patient.police_station} />
           <Line label={t.district} value={patient.district} />
         </div>
-        <div className="af-row af-row-half">
+        <div className="af-row af-row-admission">
           <Line
             label={t.admissionDate}
             value={formatDate(clean(admission.admit_date))}
           />
           <Line label={t.time} value={formatTime(admission.admit_time)} />
+          <Line label={t.ipdId} value={admission.reg_id} />
         </div>
         <Line label={t.diagnosis} value={admission.provisional_diagnosis} />
         <Line label={t.doctor} value={doctor} />
@@ -343,11 +341,6 @@ function IpdAdmissionPrint() {
           font-weight: 700;
         }
 
-        .af-reg {
-          margin: 0.5mm 0 0;
-          font-size: 10pt;
-        }
-
         .af-phone {
           position: absolute;
           top: 0;
@@ -385,6 +378,10 @@ function IpdAdmissionPrint() {
         .af-row-half,
         .af-row-discharge {
           grid-template-columns: 1fr 1fr;
+        }
+
+        .af-row-admission {
+          grid-template-columns: 1.3fr 1fr 1fr;
         }
 
         .af-line {

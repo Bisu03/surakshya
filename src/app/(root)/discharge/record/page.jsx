@@ -11,6 +11,7 @@ import { SuccessHandling } from "@/utils/successHandling";
 import { TabLinks } from "@/utils/tablinks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 import Link from "next/link";
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { FaPrint } from "react-icons/fa";
@@ -23,6 +24,7 @@ const MiddleSection = lazy(() => import("@/components/Middlesection"));
 const DischargeRecord = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const canDelete = hasPermission(session?.user, "discharge", "delete");
   const contentRef = useRef(null);
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(getDate());
@@ -69,7 +71,7 @@ const DischargeRecord = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       data?.data?.map((record) => ({
         "UHID": record.mrd_id,
-        "REGID": record.reg_id,
+        "IPD ID": record.reg_id,
         "Patient Name": record.patient?.fullname,
         Consultant: record?.consultant?.drname,
         "Discharge Date": record.discharge_date,
@@ -144,7 +146,7 @@ const DischargeRecord = () => {
                         UHID
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        REGID
+                        IPD ID
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                         Discharge Date/Time
@@ -177,7 +179,7 @@ const DischargeRecord = () => {
                           >
                             <FaPrint size={18} />
                           </Link>
-                          {session?.user?.role === "Admin" && (
+                          {canDelete && (
                             <button
                               onClick={() => handleDelete(record._id)}
                               className="text-red-600 hover:text-red-900"

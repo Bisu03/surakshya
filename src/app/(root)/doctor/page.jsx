@@ -23,12 +23,15 @@ import { SuccessHandling } from "@/utils/successHandling";
 import { ErrorHandeling } from "@/utils/errorHandling";
 import Spinner from "@/components/ui/Spinner";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
 const Doctor = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const canEdit = hasPermission(session?.user, "doctors", "edit");
+  const canDelete = hasPermission(session?.user, "doctors", "delete");
   const [isModalOpen, setModalOpen] = useState(false);
   const initialState = {
     drname: "",
@@ -158,7 +161,7 @@ const Doctor = () => {
                       <th className="px-4 py-3">Doctor Email</th>
                       <th className="px-4 py-3">Doctor Charge</th>
                       <th className="px-4 py-3">Doctor Comission</th>
-                      {session?.user?.role === "Admin" && (
+                      {(canEdit || canDelete) && (
                         <th className="px-4 py-3 ">Actions</th>
                       )}
                     </tr>
@@ -174,23 +177,27 @@ const Doctor = () => {
                         <td className="px-4 py-3">{dr?.email}</td>
                         <td className="px-4 py-3">{dr?.charge}</td>
                         <td className="px-4 py-3">{dr?.comission || "0"}%</td>
-                        {session?.user?.role === "Admin" && (
+                        {(canEdit || canDelete) && (
                           <td className="px-4 py-3 space-x-2 flex">
-                            <button
-                              onClick={() => handleEdit(dr)}
-                              className="btn btn-secondary "
-                            >
-                              {" "}
-                              <FaEdit />{" "}
-                            </button>
-                            <button
-                              onClick={() => handleDelete(dr?._id)}
-                              className="btn btn-error "
-                            >
-                              {" "}
-                              <MdDelete />{" "}
-                              {mutationDelete.isPending && <Spinner />}{" "}
-                            </button>
+                            {canEdit && (
+                              <button
+                                onClick={() => handleEdit(dr)}
+                                className="btn btn-secondary "
+                              >
+                                {" "}
+                                <FaEdit />{" "}
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button
+                                onClick={() => handleDelete(dr?._id)}
+                                className="btn btn-error "
+                              >
+                                {" "}
+                                <MdDelete />{" "}
+                                {mutationDelete.isPending && <Spinner />}{" "}
+                              </button>
+                            )}
                           </td>
                         )}
                       </tr>

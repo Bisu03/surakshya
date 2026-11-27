@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongoConnection";
+import { requirePermission } from "@/lib/serverAuth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
@@ -36,16 +37,8 @@ export async function GET(req, context) {
 export async function PUT(req, context) {
     // Connect to the database
     await connectDB();
-
-    // Get the session
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-        return NextResponse.json(
-            { success: false, message: "Unauthorized" },
-            { status: 401 }
-        );
-    }
+    const authorization = await requirePermission("opd", "edit");
+    if (authorization.response) return authorization.response;
 
     try {
         const { slug } = await context.params;
@@ -87,16 +80,8 @@ export async function PUT(req, context) {
 export async function DELETE(req, context) {
     // Connect to the database
     await connectDB();
-
-    // Get the session
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-        return NextResponse.json(
-            { success: false, message: "Unauthorized" },
-            { status: 401 }
-        );
-    }
+    const authorization = await requirePermission("opd", "delete");
+    if (authorization.response) return authorization.response;
 
     try {
         const { slug } = await context.params;

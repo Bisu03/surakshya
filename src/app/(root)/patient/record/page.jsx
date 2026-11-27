@@ -14,12 +14,14 @@ import { ErrorHandeling } from "@/utils/errorHandling";
 import { getDate } from "@/lib/currentDate";
 import Spinner from "@/components/ui/Spinner";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 
 const MiddleSection = lazy(() => import("@/components/Middlesection"));
 
 const PatientRecord = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const canDelete = hasPermission(session?.user, "patient", "delete");
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const limit = 10; // You can make this adjustable if needed
@@ -111,16 +113,16 @@ const PatientRecord = () => {
                         <td className="px-4 py-3">{patient?.phone_number}</td>
                         <td className="px-4 py-3">{patient?.age}</td>
                         <td className="px-4 py-3">{patient?.gender}</td>
-                        {session?.user?.role === "Admin" && (
-                          <td className="px-4 py-3 space-x-2 flex">
-                            {/* <button className="btn btn-success "> <FaPrint /> </button> */}
-                            {/* <Link
-                              href={`/patient/${patient._id}`}
-                              className="btn btn-secondary "
-                            >
-                              {" "}
-                              <FaEdit />{" "}
-                            </Link> */}
+                        <td className="px-4 py-3 space-x-2 flex">
+                          {/* <button className="btn btn-success "> <FaPrint /> </button> */}
+                          {/* <Link
+                            href={`/patient/${patient._id}`}
+                            className="btn btn-secondary "
+                          >
+                            {" "}
+                            <FaEdit />{" "}
+                          </Link> */}
+                          {canDelete && (
                             <button
                               onClick={() => handleDelete(patient._id)}
                               className="btn btn-error "
@@ -129,8 +131,8 @@ const PatientRecord = () => {
                               <MdDelete />{" "}
                               {deleteMutation.isPending && <Spinner />}
                             </button>
-                          </td>
-                        )}
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -348,7 +348,7 @@ const IpdService = () => {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="Enter REGID"
+                    placeholder="Enter IPD ID"
                     className="border p-2 rounded w-full sm:w-auto"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -375,7 +375,7 @@ const IpdService = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div className="space-y-1">
-                      <div className="text-gray-500">REGID</div>
+                      <div className="text-gray-500">IPD ID</div>
                       <div className="font-mono">{formData?.reg_id || "-"}</div>
                     </div>
                     <div className="space-y-1">

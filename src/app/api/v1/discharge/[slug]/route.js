@@ -23,7 +23,7 @@ export async function GET(req, context) {
     const { slug } = await context.params;
     if (!validRegId(slug)) {
       return NextResponse.json(
-        { success: false, message: "REGID must be a valid number" },
+        { success: false, message: "IPD ID must be a valid number" },
         { status: 400 }
       );
     }
@@ -103,7 +103,7 @@ export async function PUT(req, context) {
     const { slug } = await context.params;
     if (!validRegId(slug)) {
       return NextResponse.json(
-        { success: false, message: "REGID must be a valid number" },
+        { success: false, message: "IPD ID must be a valid number" },
         { status: 400 }
       );
     }

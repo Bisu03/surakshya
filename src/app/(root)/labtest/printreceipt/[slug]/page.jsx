@@ -210,7 +210,7 @@ const LabReceipt = () => {
                       </p>
                       {pathologyData?.reg_id && (
                         <p className="mb-1 print:mb-0.5 print:mt-0">
-                          <span className="font-semibold">REGID:</span>{" "}
+                          <span className="font-semibold">IPD ID:</span>{" "}
                           {pathologyData?.reg_id}
                         </p>
                       )}

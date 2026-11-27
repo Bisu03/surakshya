@@ -81,6 +81,30 @@ export const authOptions = {
         token.id = String(user.id);
         token.permissions = user.permissions;
         token.isActive = user.isActive;
+      } else if (token.id) {
+        // Re-read the account on every session check so permission, role and
+        // active-status changes made by an admin apply without a re-login.
+        try {
+          await connectDB();
+          const fresh = await User.findById(
+            token.id,
+            "username email role pageAccess permissions isActive"
+          ).lean();
+          if (!fresh) {
+            token.isActive = false;
+            token.permissions = [];
+          } else {
+            token.role = fresh.role;
+            token.username = fresh.username;
+            token.email = fresh.email;
+            token.pageAccess = fresh.pageAccess;
+            token.permissions = normalizePermissions(fresh.permissions, fresh.pageAccess);
+            token.isActive = fresh.isActive;
+          }
+        } catch (error) {
+          // Keep the last known values if the database is briefly unreachable.
+          console.error("Unable to refresh session permissions:", error.message);
+        }
       }
       return token;
     },

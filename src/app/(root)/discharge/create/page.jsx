@@ -332,7 +332,7 @@ function CreateDischarge() {
                 <input
                   type="text"
                   inputMode="numeric"
-                  placeholder="Enter REGID"
+                  placeholder="Enter IPD ID"
                   className={inputClass}
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
@@ -366,7 +366,7 @@ function CreateDischarge() {
                 </div>
                 <div>
                   <p className="text-xs font-medium uppercase text-gray-500">
-                    UHID / REGID
+                    UHID / IPD ID
                   </p>
                   <p className="font-semibold">
                     {formData.mrd_id || "—"} / {formData.reg_id || "—"}

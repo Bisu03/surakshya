@@ -103,7 +103,7 @@ const PatientDetails = () => {
                   </div>
                   <div className="space-y-1">
                     <div className="text-sm font-medium text-gray-500">
-                      REGID
+                      IPD ID
                     </div>
                     <div className="font-mono">
                       {data?.data?.pData?.reg_id || "N/A"}

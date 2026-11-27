@@ -184,7 +184,7 @@ const MoneyReceipt = () => {
                     <>
                       <input
                         type="text"
-                        placeholder="Enter REGID"
+                        placeholder="Enter IPD ID"
                         className="p-2 border rounded w-full md:w-48"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -230,7 +230,7 @@ const MoneyReceipt = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div className="space-y-1">
-                      <div className="text-gray-500">REGID</div>
+                      <div className="text-gray-500">IPD ID</div>
                       <div className="font-mono">{formData?.reg_id || "-"}</div>
                     </div>
                     <div className="space-y-1">

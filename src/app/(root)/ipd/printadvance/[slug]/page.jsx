@@ -72,7 +72,7 @@ const PrintAdvance = () => {
                 {formatTime(formData?.ipd?.admit_time)}
               </p>
               <p>UHID: {formData?.mrd_id}</p>
-              <p>REGID: {formData?.reg_id}</p>
+              <p>IPD ID: {formData?.reg_id}</p>
             </div>
           </div>
         </div>

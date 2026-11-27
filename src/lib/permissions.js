@@ -4,7 +4,7 @@ export const PERMISSION_RESOURCES = [
   { key: "dashboard", label: "Dashboard", category: "Dashboard", actions: ["view"] },
   { key: "patient", label: "Patients", category: "Patient", actions: PERMISSION_ACTIONS },
   { key: "ipd", label: "IPD Admission & Records", category: "IPD", actions: [...PERMISSION_ACTIONS, "print"] },
-  { key: "ipd_billing", label: "IPD Services & Billing", category: "IPD", actions: ["view", "edit", "finalize", "print"] },
+  { key: "ipd_billing", label: "IPD Services & Billing", category: "IPD", actions: ["view", "edit", "delete", "finalize", "print"] },
   { key: "discharge", label: "Discharge", category: "IPD", actions: PERMISSION_ACTIONS },
   { key: "money_receipt", label: "Money Receipt", category: "IPD", actions: PERMISSION_ACTIONS },
   { key: "opd", label: "OPD", category: "OPD", actions: [...PERMISSION_ACTIONS, "print"] },
@@ -93,7 +93,7 @@ export function hasCategoryAccess(user, category) {
   if (user?.role === "Admin") return true;
   return PERMISSION_RESOURCES.some(
     (resource) =>
-      resource.category === category && hasPermission(user, resource, "view")
+      resource.category === category && hasPermission(user, resource.key, "view")
   );
 }
 

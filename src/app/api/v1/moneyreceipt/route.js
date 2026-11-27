@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 
 import { connectDB } from "@/lib/mongoConnection";
+import { requirePermission } from "@/lib/serverAuth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import MoneyReceipt from "@/models/MoneyReceipt.models";
 import { formattedTime } from "@/lib/timeGenerate";
@@ -136,14 +137,8 @@ export async function PUT(req) {
 
 export async function DELETE(req) {
     await connectDB();
-    const session = await getServerSession(authOptions);
-    if (!session) {
-        return NextResponse.json(
-            { success: false, message: "Unauthorized" },
-            { status: 401 }
-        );
-    }
-
+    const authorization = await requirePermission("money_receipt", "delete");
+    if (authorization.response) return authorization.response;
     try {
         const { searchParams } = new URL(req.url);
         const receiptId = searchParams.get("id");

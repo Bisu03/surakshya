@@ -208,7 +208,7 @@ export default function UpdateIpdAdmission() {
       </Heading>
       <form onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-5 shadow">
         <div className="grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4">
-          <div><strong>REGID:</strong> {form.reg_id}</div>
+          <div><strong>IPD ID:</strong> {form.reg_id}</div>
           <div><strong>UHID:</strong> {form.mrd_id}</div>
         </div>
 

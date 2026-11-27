@@ -15,6 +15,7 @@ import { ErrorHandeling } from "@/utils/errorHandling";
 import { SuccessHandling } from "@/utils/successHandling";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 import React, { lazy, Suspense, useState } from "react";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 
@@ -25,6 +26,8 @@ const ExpenseCategory = () => {
   const [formData, setFormData] = useState({ name: "", id: null });
   const [isModalOpen, setModalOpen] = useState(false);
   const { data: session } = useSession();
+  const canEdit = hasPermission(session?.user, "expenses", "edit");
+  const canDelete = hasPermission(session?.user, "expenses", "delete");
   // Fetch expense categories
   const {
     data: categories,
@@ -166,22 +169,24 @@ const ExpenseCategory = () => {
                     {categories?.data?.map((category) => (
                       <tr key={category._id} className="hover:bg-gray-50">
                         <td className="px-4 py-3">{category?.name}</td>
-                        {session?.user?.role === "Admin" && (
-                          <td className="px-4 py-3 flex space-x-2">
+                        <td className="px-4 py-3 flex space-x-2">
+                          {canEdit && (
                             <button
                               onClick={() => handleEdit(category)}
                               className="text-blue-500 hover:text-blue-700"
                             >
                               <FaEdit className="w-5 h-5" />
                             </button>
+                          )}
+                          {canDelete && (
                             <button
                               onClick={() => handleDelete(category._id)}
                               className="text-red-500 hover:text-red-700"
                             >
                               <FaTrash className="w-5 h-5" />
                             </button>
-                          </td>
-                        )}
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

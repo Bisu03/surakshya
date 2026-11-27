@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 
 import { connectDB } from "@/lib/mongoConnection"; // MongoDB connection utility
+import { requirePermission } from "@/lib/serverAuth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
 import Labtest from "@/models/Labtest.models"; // Mongoose  model
@@ -94,15 +95,9 @@ export async function PUT(req, context) {
 export async function DELETE(req, context) {
     // Connect to the database
     await connectDB();
+    const authorization = await requirePermission("laboratory", "delete");
+    if (authorization.response) return authorization.response;
 
-    // Get the session
-    const session = await getServerSession(authOptions);
-    if (!session) {
-        return NextResponse.json(
-            { success: false, message: "Unauthorized" },
-            { status: 401 }
-        );
-    }
     try {
         const { slug } = await context.params;
 

@@ -85,7 +85,7 @@ const PrintReceipt = () => {
               {data?.data?.mrd_id || "-"}
             </p>
             <p>
-              <span className="font-semibold">REGID:</span>{" "}
+              <span className="font-semibold">IPD ID:</span>{" "}
               {data?.data?.reg_id || "-"}
             </p>
             <p>

@@ -12,6 +12,7 @@ import { SuccessHandling } from "@/utils/successHandling";
 import { TabLinks } from "@/utils/tablinks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 import Link from "next/link";
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { FaEdit, FaFileExcel, FaPrint } from "react-icons/fa";
@@ -26,6 +27,8 @@ const OpdRecord = () => {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const { data: session } = useSession();
+  const canEdit = hasPermission(session?.user, "opd", "edit");
+  const canDelete = hasPermission(session?.user, "opd", "delete");
   const contentRef = useRef(null);
   const [startDate, setStartDate] = useState(getDate());
   const [endDate, setEndDate] = useState(getDate());
@@ -256,7 +259,7 @@ const OpdRecord = () => {
                             {" "}
                             <FaPrint />
                           </Link>
-                          {session?.user?.role === "Admin" && (
+                          {canEdit && (
                             <Link
                               href={`/opd/update/${patient._id}`}
                               className="btn btn-secondary "
@@ -265,7 +268,7 @@ const OpdRecord = () => {
                               <FaEdit />{" "}
                             </Link>
                           )}
-                          {session?.user?.role === "Admin" && (
+                          {canDelete && (
                             <button
                               onClick={() => handleDelete(patient._id)}
                               className="btn btn-error "

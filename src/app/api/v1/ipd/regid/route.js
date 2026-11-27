@@ -24,7 +24,7 @@ export async function GET(req) {
         success: true,
         next,
         available: false,
-        message: "REGID must be a positive whole number",
+        message: "IPD ID must be a positive whole number",
       });
     }
 
@@ -35,13 +35,13 @@ export async function GET(req) {
       value: regId,
       available: !taken,
       message: taken
-        ? `REGID ${regId} is already used`
-        : `REGID ${regId} is available`,
+        ? `IPD ID ${regId} is already used`
+        : `IPD ID ${regId} is available`,
     });
   } catch (error) {
     console.error("REGID check failed:", error);
     return NextResponse.json(
-      { success: false, message: "Unable to check REGID" },
+      { success: false, message: "Unable to check IPD ID" },
       { status: 500 }
     );
   }

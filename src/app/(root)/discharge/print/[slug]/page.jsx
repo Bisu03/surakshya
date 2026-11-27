@@ -77,7 +77,7 @@ function PatientStrip({ name, ipNo }) {
   return (
     <div className="ds-strip">
       <Field label="Patient's Name" value={name} />
-      <Field label="REGID" value={ipNo} />
+      <Field label="IPD ID" value={ipNo} />
     </div>
   );
 }
@@ -472,7 +472,7 @@ function DischargePrint() {
               <Field label="Sex" value={patient.gender} />
             </div>
             <div className="ds-row ds-row-ip">
-              <Field label="REGID" value={record.reg_id} />
+              <Field label="IPD ID" value={record.reg_id} />
               <Field label="Bed No" />
               <Field label="Admitting Consultant:" value={consultant.drname} />
             </div>

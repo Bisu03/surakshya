@@ -42,5 +42,5 @@ export async function reserveRegId() {
     const regId = await reserveSequence("regid");
     if (!(await isRegIdTaken(regId))) return regId;
   }
-  throw new Error("Unable to find a free REGID");
+  throw new Error("Unable to find a free IPD ID");
 }

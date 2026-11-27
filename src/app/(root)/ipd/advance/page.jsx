@@ -143,7 +143,7 @@ const PatientAdvance = () => {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="Enter REGID"
+                  placeholder="Enter IPD ID"
                   className="border p-2 rounded w-full sm:w-auto"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -167,7 +167,7 @@ const PatientAdvance = () => {
                       {formData?.mrd_id && `UHID: ${formData?.mrd_id}`}
                     </span>
                     <span className="text-sm font-normal ml-2">
-                      {formData?.reg_id && `REGID: ${formData?.reg_id}`}
+                      {formData?.reg_id && `IPD ID: ${formData?.reg_id}`}
                     </span>
                   </h1>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">

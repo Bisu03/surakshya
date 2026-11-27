@@ -252,7 +252,7 @@ export default function ResponsiveSidebar({ children }) {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="Enter REGID"
+                  placeholder="Enter IPD ID"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}

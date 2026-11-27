@@ -13,12 +13,15 @@ function temporaryPassword() {
   return randomBytes(9).toString("base64url");
 }
 
-async function sendCredentials(user, password) {
+async function sendCredentials(user, password, { reset = false } = {}) {
+  const intro = reset ? "Your password has been reset." : "Your account has been created.";
   await sendMail({
     to: user.email,
-    subject: "Hospital Management System login credentials",
-    text: `Login: ${user.email}\nTemporary password: ${password}`,
-    html: `<p>Your account has been created.</p><p>Login: <strong>${user.email}</strong></p><p>Temporary password: <strong>${password}</strong></p><p>Please keep these credentials private.</p>`,
+    subject: reset
+      ? "Hospital Management System password reset"
+      : "Hospital Management System login credentials",
+    text: `${intro}\nLogin: ${user.email}\nTemporary password: ${password}`,
+    html: `<p>${intro}</p><p>Login: <strong>${user.email}</strong></p><p>Temporary password: <strong>${password}</strong></p><p>Please keep these credentials private.</p>`,
   });
 }
 
@@ -76,7 +79,7 @@ export async function POST(req) {
       await sendCredentials(user, password);
     } catch (error) {
       emailSent = false;
-      warning = "User created, but SMTP delivery failed. Use Reset Password to retry.";
+      warning = `User created, but the credentials email failed (${error.message}). Use Reset Password to retry.`;
       console.error("Credential email delivery failed:", error.message);
     }
 
@@ -114,20 +117,23 @@ export async function PUT(req) {
 
     if (body.resetPassword) {
       const password = temporaryPassword();
-      user.password = await bcrypt.hash(password, 10);
-      await user.save();
+      // Email first, save after: if the email fails, the old password keeps
+      // working instead of the user being locked out by one nobody knows.
       try {
-        await sendCredentials(user, password);
+        await sendCredentials(user, password, { reset: true });
       } catch (error) {
+        console.error("Password reset email delivery failed:", error.message);
         return NextResponse.json(
           {
-            success: true,
+            success: false,
             emailSent: false,
-            message: "Password reset, but SMTP delivery failed",
+            message: `Password NOT changed: the email could not be sent (${error.message})`,
           },
-          { status: 200 }
+          { status: 503 }
         );
       }
+      user.password = await bcrypt.hash(password, 10);
+      await user.save();
       return NextResponse.json({
         success: true,
         emailSent: true,

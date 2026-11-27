@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongoConnection";
+import { requirePermission } from "@/lib/serverAuth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
@@ -11,6 +12,8 @@ import ExpenseCategory from "@/models/ExpenseCategory.models";
 export async function PUT(req, context) {
     // Connect to the database
     await connectDB();
+    const authorization = await requirePermission("expenses", "edit");
+    if (authorization.response) return authorization.response;
 
     // Get the current session from next-auth
     const session = await getServerSession(authOptions);
@@ -49,15 +52,16 @@ export async function PUT(req, context) {
 export async function DELETE(req, context) {
     // Connect to the database
     await connectDB();
+    const authorization = await requirePermission("expenses", "delete");
+    if (authorization.response) return authorization.response;
 
     // Get the current session from next-auth
     const session = await getServerSession(authOptions);
 
     if (session) {
         try {
-            const body = await req.json();
+            // A DELETE request has no body; reading one threw and broke every delete.
             const { slug } = await context.params;
-            // insert data into data base
             await ExpenseCategory.findByIdAndDelete(slug);
 
             // Return the message

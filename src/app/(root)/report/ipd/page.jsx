@@ -38,7 +38,7 @@ const IpdReport = () => {
   };
 
   const csvData = [
-    ["UHID", "Bill No", "REGID", "Patient Name", "Net Total", "Due", "Payment Method", "Status", "Discharged Status", "Bill Date"],
+    ["UHID", "Bill No", "IPD ID", "Patient Name", "Net Total", "Due", "Payment Method", "Status", "Discharged Status", "Bill Date"],
     ...tableData.map(item => [
       item.mrd_id,
       item.bill_no,
@@ -172,7 +172,7 @@ const IpdReport = () => {
                     <tr>
                       <th>UHID</th>
                       <th>Bill No</th>
-                      <th>REGID</th>
+                      <th>IPD ID</th>
                       <th>Patient Name</th>
                       <th>Net Total</th>
                       <th>Due</th>

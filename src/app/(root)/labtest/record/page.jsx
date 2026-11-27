@@ -12,6 +12,7 @@ import { SuccessHandling } from "@/utils/successHandling";
 import { TabLinks } from "@/utils/tablinks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { hasPermission } from "@/lib/permissions";
 import Link from "next/link";
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { FaFileExcel, FaPrint } from "react-icons/fa";
@@ -26,6 +27,7 @@ const PathologyRecord = () => {
   const queryClient = useQueryClient();
   const contentRef = useRef(null);
   const { data: session } = useSession();
+  const canDelete = hasPermission(session?.user, "laboratory", "delete");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [searchName, setSearchName] = useState("");
   const [fromDate, setFromDate] = useState(getDate());
@@ -393,7 +395,7 @@ const PathologyRecord = () => {
                               >
                                 <FaPrint />
                               </Link>
-                              {session?.user?.role === "Admin" && (
+                              {canDelete && (
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();

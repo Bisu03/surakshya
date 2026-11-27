@@ -62,7 +62,7 @@ const IpdSummary = () => {
     const csvData = tableData.map(item => ({
         "Patient Name": item.fullname,
         "UHID": item.mrdId,
-        "REGID": item.regId,
+        "IPD ID": item.regId,
         "Admit Date": item.admitDate,
         "Doctor Name": item.doctorName,
         "Total Visits": item.totalVisits
@@ -143,7 +143,7 @@ const IpdSummary = () => {
                                         <tr>
                                             <th>Patient Name</th>
                                             <th>UHID</th>
-                                            <th>REGID</th>
+                                            <th>IPD ID</th>
                                             <th>Admit Date</th>
                                             <th>Total Visits</th>
                                         </tr>
