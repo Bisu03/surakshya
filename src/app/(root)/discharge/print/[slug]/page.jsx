@@ -206,6 +206,15 @@ function DischargePrint() {
           font-weight: 700;
         }
 
+        /* Third header column, opposite the logo; keeps the name centred. */
+        .ds-license {
+          margin: 0;
+          font-size: 9pt;
+          font-weight: 700;
+          line-height: 1.25;
+          text-align: right;
+        }
+
         .ds-title {
           margin: 3mm 0 4mm;
           font-size: 18pt;
@@ -448,7 +457,11 @@ function DischargePrint() {
                 Phone – {HOSPITAL.phone} * Mobile – {HOSPITAL.mobile}
               </p>
             </div>
-            <span aria-hidden="true" />
+            <p className="ds-license">
+              License No.
+              <br />
+              {HOSPITAL.license}
+            </p>
           </header>
           <h2 className="ds-title">DISCHARGE SUMMARY</h2>
 

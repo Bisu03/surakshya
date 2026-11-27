@@ -27,6 +27,7 @@ const TEXT = {
     hospitalName: HOSPITAL.nameBn,
     places: HOSPITAL.placesBn.join(" ● "),
     regNo: "রেজি নং -",
+    license: "লাইসেন্স নং",
     patientName: "রোগীর নাম - শ্রী / শ্রীমতী",
     age: "বয়স",
     fatherHusband: "পিতা / স্বামী",
@@ -65,6 +66,7 @@ const TEXT = {
     hospitalName: HOSPITAL.name,
     places: HOSPITAL.places.join(" ● "),
     regNo: "REGID -",
+    license: "License No.",
     patientName: "Patient's Name - Sri / Smt.",
     age: "Age",
     fatherHusband: "Father / Husband",
@@ -142,6 +144,11 @@ function AdmissionSheet({ lang, admission, isSecond }) {
         </div>
         <p className="af-phone">
           Ph.- {HOSPITAL.phone}, {HOSPITAL.mobile}
+        </p>
+        <p className="af-license">
+          {t.license}
+          <br />
+          {HOSPITAL.license}
         </p>
       </header>
 
@@ -349,6 +356,15 @@ function IpdAdmissionPrint() {
           font-size: 9pt;
           font-weight: 700;
           white-space: nowrap;
+        }
+
+        /* Third header column, opposite the logo, below the phone line. */
+        .af-license {
+          margin: 0;
+          font-size: 9pt;
+          font-weight: 700;
+          line-height: 1.25;
+          text-align: right;
         }
 
         .af-fields {

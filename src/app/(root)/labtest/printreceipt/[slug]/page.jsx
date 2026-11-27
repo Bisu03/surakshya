@@ -3,7 +3,7 @@
 
 import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
-import { HOSPITAL, HOSPITAL_ADDRESS, HOSPITAL_CONTACT } from "@/lib/hospitalBrand";
+import { HOSPITAL, HOSPITAL_ADDRESS, HOSPITAL_CONTACT, HOSPITAL_LICENSE } from "@/lib/hospitalBrand";
 import { withAuth } from "@/services/withAuth";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -65,7 +65,7 @@ const LabReceipt = () => {
           {HOSPITAL_ADDRESS}
         </p>
         <div className="text-base font-semibold text-black mb-0 print:text-[15px] w-full flex-shrink">
-          <p>{HOSPITAL_CONTACT}</p>
+          <p>{HOSPITAL_CONTACT} | {HOSPITAL_LICENSE}</p>
         </div>
       </div>
       <div className="border-b-2 border-black my-0 print:my-0"></div>

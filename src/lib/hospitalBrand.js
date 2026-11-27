@@ -11,6 +11,7 @@ export const HOSPITAL = {
   phone: "(03228) 263365",
   mobile: "8372056083",
   email: "surakshyanursinghome17@gmail.com",
+  license: "34554738",
   logo: "/surakshya-logo.jpg",
 };
 
@@ -19,3 +20,6 @@ export const HOSPITAL_ADDRESS = `${HOSPITAL.places.join(", ")}, PIN - ${HOSPITAL
 
 // "Ph.- (03228) 263365, Mob.- 8372056083"
 export const HOSPITAL_CONTACT = `Ph.- ${HOSPITAL.phone}, Mob.- ${HOSPITAL.mobile}`;
+
+// "License No. 34554738"
+export const HOSPITAL_LICENSE = `License No. ${HOSPITAL.license}`;

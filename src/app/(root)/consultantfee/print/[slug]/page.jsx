@@ -2,7 +2,7 @@
 
 import Loading from "@/components/Loading";
 import PrintUi from "@/components/ui/PrintUi";
-import { HOSPITAL, HOSPITAL_ADDRESS } from "@/lib/hospitalBrand";
+import { HOSPITAL, HOSPITAL_ADDRESS, HOSPITAL_CONTACT, HOSPITAL_LICENSE } from "@/lib/hospitalBrand";
 import { withAuth } from "@/services/withAuth";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -55,6 +55,7 @@ const ConsultantFeePrint = () => {
           <p className="text-lg mt-1"> {formData?.consultant?.drinfo}</p>
           <p className="mt-1 font-semibold">{HOSPITAL.name}</p>
           <p>{HOSPITAL_ADDRESS}</p>
+          <p>{HOSPITAL_CONTACT} | {HOSPITAL_LICENSE}</p>
         </div>
 
         {/* Exact divider line */}

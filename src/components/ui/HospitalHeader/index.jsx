@@ -26,8 +26,12 @@ export default function HospitalHeader({ className = "" }) {
         <p className="text-sm text-gray-800">{HOSPITAL_CONTACT}</p>
         <p className="text-xs text-gray-700">Email : {HOSPITAL.email}</p>
       </div>
-      {/* Balances the logo so the name stays centred on the page. */}
-      <div className="w-[88px] shrink-0" aria-hidden="true" />
+      {/* Same width as the logo so the name stays centred on the page. */}
+      <p className="w-[88px] shrink-0 text-right text-xs font-semibold leading-tight text-gray-800">
+        License No.
+        <br />
+        {HOSPITAL.license}
+      </p>
     </header>
   );
 }
